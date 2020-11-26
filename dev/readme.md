@@ -1,18 +1,16 @@
 # Development Summary
 
-I need a QT5 widget written in C++ for a desktop application. The Libraries used are QT, Boost, and sqlite3. I need a custom `QTreeView` written that is able to be sorted, filtered, and edited using sqlite3 as the backend. To Sort and filter you need to use SQL queries to reorder the data. The widget should be able to handle at least one thousand rows in the view not including all the child elements.
+I a small C++ library used for a Windows desktop application. The Libraries used are Boost and sqlite3. I need a converter from any arbitrary .csv file to a `sqlite3` database table.
 
-I already started on the code. See the header I started for how to use each method of the widget [/src/UI/MainWidget.hpp](https://github.com/bradosia/BookFiler-Lib-Sort-Filter-Tree-Widget/blob/main/src/UI/MainWidget.hpp).
+I already started on the code. See the header I started for how to use each method of the importer [/src/core/Csv.hpp](https://github.com/bradosia/BookFiler-Lib-CSV-to-SQLite/blob/master/src/core/Csv.hpp).
 
 ## Compiler and compatability
 
 Program must compile on Windows and Linux. For Windows, use MinGW for compiling. For Linux use GCC. Use cmake as the build scipt. Personally, the IDE I use is QT Creator, but any should work as long as you can build with cmake.
 
-## `QTreeView` column dynamic sizing
+# Usage Instructions
 
-The `QTreeView` columns must be dynamically created to be the same as the `sqlite3` table passed to the widget. You must use an SQL query to detect the columns in the table and dynamically create a view for it. `sqlite3` table must have the columns `guid` and `guid_parent` (the name of the column can be different, the columns must have the same purpose) so that the tree view children can be built off this. 
-
-For example, I should be able to connect any database that is set up with columns `guid` and `guid_parent`:
+Connect to your database:
 ```cpp
 sqlite3 *dbPtr = nullptr;
 sqlite3_open("myDatabase.db", &dbPtr);
@@ -21,39 +19,25 @@ std::shared_ptr<sqlite3> database(nullptr);
 database.reset(dbPtr, sqlite3_close);
 ```
 
-Then I should be able to create the tree widget and set the database data.
+Create the importer, set the database, then run the import on a csv file
 ```cpp
-std::shared_ptr<bookfiler::widget::TreeImpl> treeWidget =
-      std::make_shared<bookfiler::widget::TreeImpl>();
-treeWidget->setData(database, "testTable", "guid", "parent_guid");
-// Set the view to show all rows with column "parent_guid"==NULL
-treeWidget->setRoot("*"); 
-// Update the internal implementation
-treeWidget->update();
+std::shared_ptr<bookfiler::sqlite::Csv> csvImporter =
+      std::make_shared<bookfiler::sqlite::Csv>();
+csvImporter->setDatabase(database, "testTable");
+boost::system::error_code ec;
+csvImporter->import(CsvFileName, ec);
 ```
 
-Here is an example of how the `QTreeView` will by dynamically created by the `sqlite3` table:
-
-### Example 1
-
-`sqlite3` table columns: guid, parent_guid, Subject, Important, Attachment, From, Date, Size. Hidden columns: guid, parent_guid.
-
-![Style 1](https://github.com/bradosia/BookFiler-Lib-Sort-Filter-Tree-Widget/blob/main/dev/tree-view-design-1.png?raw=true)
-
-### Example 2
-
-`sqlite3` table columns: guid, parent_guid, Name. Hidden columns: guid, parent_guid.
-
-![Style 2](https://github.com/bradosia/BookFiler-Lib-Sort-Filter-Tree-Widget/blob/main/dev/tree-view-design-2.png?raw=true)
-
-## Sorting and Filtering Implementation
-
-You may use `QSortFilterProxyModel` to help with sorting and filtering. 
+## Requirements
+* Use as little memory as possible. Don't load the whole file into memory, then start parsing. You should stream the csv data and parse.
+* **Low memory consuption** - C++ iostreams are used to avoid memory warnings since datasets may be fairly large
+* **Multiple line endings support** - both Windows ( CR LF ) and Unix (LF ) line endings are processed correctly
+* **SQL schema validation** - CSV column names are parsed and user specified types are assigned to columns. In case of column count or name mismatch an error is produced
+* **Time performance optimizations** - file IO (FS bound) and parsing operations (CPU bound) are performed on multiple threads and use the **producer-consumer** model.
+* **Non standard comments** - the CSV content may be preceeded by some 
 
 ## Coding Standards
-Always use the standard library when possible. Use `std::shared_ptr` and `std::unique_ptr` instead of raw pointers whenever possible. use `boost` if some method does not exist in standard library. Finally use `QT5` as the last option.
-
-Separate all graphical GUI code into the `/src/UI/` directory. Anything with `QT` should be in the `/src/UI/` directory. All logic and non-GUI code goes into the `/src/core/` directory.
+Always use the standard library when possible. Use `std::shared_ptr` and `std::unique_ptr` instead of raw pointers whenever possible. use `boost` if some method does not exist in standard library.
 
 * Use camel case
 * Use C++17 best coding practices
@@ -62,9 +46,6 @@ Separate all graphical GUI code into the `/src/UI/` directory. Anything with `QT
 ## Deliverables
 
 * Clean and commented code that follows the general design already provided and discussed here
-* A working example [/src_example/example00/main.cpp](https://github.com/bradosia/BookFiler-Lib-Sort-Filter-Tree-Widget/blob/main/src_example/example00/main.cpp).
-* Should be able to click the header column titles to re-order
-* Create a search bar to filter results
-* Double clicking on a field will make it editable
-* Text should be able to be selectable in the view
+* Make the example here work. You shouldn't need to make modifications. [/src_example/example00/main.cpp](https://github.com/bradosia/BookFiler-Lib-CSV-to-SQLite/blob/master/src_example/example00/main.cpp).
+* Must be able to handle large 1gb csv files
 
