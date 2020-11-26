@@ -1,8 +1,10 @@
 # Development Summary
 
-I a small C++ library used for a Windows desktop application. The Libraries used are Boost and sqlite3. I need a converter from any arbitrary .csv file to a `sqlite3` database table.
+I need a small C++ library created for a Windows desktop application. The Libraries used are Boost and sqlite3. I need a converter from any arbitrary .csv file to a `sqlite3` database table.
 
-I already started on the code. See the header I started for how to use each method of the importer [/src/core/Csv.hpp](https://github.com/bradosia/BookFiler-Lib-CSV-to-SQLite/blob/master/src/core/Csv.hpp).
+I already wrote the header file for how the library should be used [/src/core/Csv.hpp](https://github.com/bradosia/BookFiler-Lib-CSV-to-SQLite/blob/master/src/core/Csv.hpp). You must finish implementing the widget using the source files provided in this repository. The example program is used to test the widget. [/src_example/example00/main.cpp](https://github.com/bradosia/BookFiler-Lib-CSV-to-SQLite/blob/master/src_example/example00/main.cpp).
+
+To begin development, you should fork this repository and begin implementing the source files [/src/core/](https://github.com/bradosia/BookFiler-Lib-CSV-to-SQLite/tree/master/src/core). Make a pull request or zip up your forked repository and send it to me when delivering work.
 
 ## Compiler and compatability
 
