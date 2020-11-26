@@ -39,6 +39,7 @@ class Csv {
 private:
   std::shared_ptr<sqlite3> database;
   std::string tableName;
+  bool hasHeaders;
 
 public:
   Csv();
@@ -57,6 +58,19 @@ public:
    * @return 0 on success, else error code
    */
   int setDatabase(std::shared_ptr<sqlite3> database, std::string tableName);
+  /* Sets if the csv file contains headers
+   * @param hasHeaders set to true if the first row of the csv are the headers.
+   * Set false if not. use setHeaders() to set the header names.
+   * @return 0 on success, else error code
+   */
+  int headers(bool hasHeaders);
+  /* Sets the header names for a csv file without headers. If there are too few
+   * header names provided, then untitled header names will be generated. If too
+   * many are provided, then header name list will be truncated.
+   * @param headerList the list of header names
+   * @return 0 on success, else error code.
+   */
+  int setHeaders(std::vector<std::string> headerList);
 };
 
 } // namespace sqlite

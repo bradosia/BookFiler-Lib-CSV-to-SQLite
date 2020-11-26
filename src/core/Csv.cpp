@@ -32,5 +32,12 @@ int Csv::setDatabase(std::shared_ptr<sqlite3> database_,
   return 0;
 }
 
+int Csv::headers(bool hasHeaders_) {
+  hasHeaders = hasHeaders_;
+  return 0;
+}
+
+int setHeaders(std::vector<std::string> headerList) { return 0; }
+
 } // namespace sqlite
 } // namespace bookfiler
