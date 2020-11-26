@@ -36,6 +36,14 @@ csvImporter->import(CsvFileName, ec);
 * **Time performance optimizations** - file IO (FS bound) and parsing operations (CPU bound) are performed on multiple threads and use the **producer-consumer** model.
 * **Non standard comments** - the CSV content may be preceeded by some 
 
+## References
+
+Here is an example of a csv to sqlite importer:
+
+https://github.com/sqlitebrowser/sqlitebrowser/blob/master/src/ImportCsvDialog.cpp
+
+This code may help you get started.
+
 ## Coding Standards
 Always use the standard library when possible. Use `std::shared_ptr` and `std::unique_ptr` instead of raw pointers whenever possible. use `boost` if some method does not exist in standard library.
 
