@@ -75,8 +75,8 @@ std::string createCsvFile() {
   std::ofstream myfile;
   std::string fileName = "example.csv";
   myfile.open(fileName);
-  for (int i = 0; i < 200000; i++) {
-    for (int j = 0; j < 10; j++) {
+  for (int i = 0; i < 2000000; i++) {
+    for (int j = 0; j < 14; j++) {
       myfile << gen_random(32);
       if (j < 9) {
         myfile << ", ";
