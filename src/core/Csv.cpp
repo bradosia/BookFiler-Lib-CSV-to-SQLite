@@ -1,9 +1,9 @@
 /*
- * @name BookFiler Library - Sort Filter Tree Widget
+ * @name BookFiler Library - CSV to SQLite
  * @author Branden Lee
  * @version 1.00
  * @license MIT
- * @brief Super fast tree sorting and filtering tree widget.
+ * @brief CSV to SQLite
  */
 
 /*
